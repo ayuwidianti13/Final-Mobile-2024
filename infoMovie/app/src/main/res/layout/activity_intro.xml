@@ -61,9 +61,9 @@
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Favorite Book"
+                    android:text="Favorite Movies"
                     android:textStyle="bold"
-                    android:textColor="#f4c0b4"
+                    android:textColor="@color/yellow"
                     android:textSize="27sp"/>
 
                 <TextView
@@ -87,7 +87,7 @@ check out our recommendation for you"
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/getInBtn"
                     style="@android:style/Widget.Button"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Get Started"

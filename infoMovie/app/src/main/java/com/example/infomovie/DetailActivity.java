@@ -1,11 +1,12 @@
 package com.example.infomovie;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.infomovie.Api.ApiConfig;
 import com.example.infomovie.Api.ApiServices;
 import com.example.infomovie.Model.DetailModel;
+import com.example.infomovie.R;
+import com.example.infomovie.Sqlite.DatabaseHelper;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
@@ -36,13 +39,18 @@ public class DetailActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView textdesc;
     private ImageView imgstar;
+    private boolean isFavorite = false;
+    private DatabaseHelper databaseHelper;
     private Handler handler = new Handler(Looper.getMainLooper());
+    private TextView tvError;
+    private Button btnRetry;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        databaseHelper = new DatabaseHelper(this); // intance
 
         iv_photo = findViewById(R.id.iv_photo);
         iv_back = findViewById(R.id.iv_back);
@@ -54,6 +62,8 @@ public class DetailActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progresbarDetail);
         textdesc = findViewById(R.id.textDesc);
         imgstar = findViewById(R.id.imgstar);
+        tvError = findViewById(R.id.error);
+        btnRetry = findViewById(R.id.retry);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("movieId")) {
@@ -73,23 +83,40 @@ public class DetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        iv_fav.setOnClickListener(v -> {
+            int loggedInUserId = getLoggedInUserId();
+            if (!isFavorite) {
+                saveFavoriteMovie(loggedInUserId, movieId);
+                iv_fav.setImageResource(R.drawable.love);
+                isFavorite = true;
+                iv_fav.setEnabled(false); // hilangkan
+                Toast.makeText(DetailActivity.this, "Film added to favorites", Toast.LENGTH_SHORT).show();
+            } else {
+                removeFavoriteMovie(loggedInUserId, movieId);
+                iv_fav.setImageResource(R.drawable.baseline_favorite_border_24);
+                isFavorite = false;
+                iv_fav.setEnabled(true); // Enable button to allow clicking
+                Toast.makeText(DetailActivity.this, "Film removed from favorites", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        btnRetry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMovieDetails(movieId);
+            }
+        });
     }
 
     private void getMovieDetails(String movieId) {
-        Retrofit retrofit = ApiConfig.getClient();
+        Retrofit retrofit = ApiConfig.getClient(); //untuk membuat panggilan ke API.
         ApiServices apiServices = retrofit.create(ApiServices.class);
         progressBar.setVisibility(View.VISIBLE);
 
         // Sembunyikan elemen lain saat ProgressBar muncul
-        iv_photo.setVisibility(View.GONE);
-        iv_back.setVisibility(View.GONE);
-        iv_fav.setVisibility(View.GONE);
-        tv_ratingdet.setVisibility(View.GONE);
-        tv_yeardet.setVisibility(View.GONE);
-        tv_titledet.setVisibility(View.GONE);
-        tv_desc.setVisibility(View.GONE);
-        textdesc.setVisibility(View.GONE);
-        imgstar.setVisibility(View.GONE);
+        hideViews();
 
         Call<DetailModel> call = apiServices.getMovieById(movieId);
         call.enqueue(new Callback<DetailModel>() {
@@ -103,45 +130,78 @@ public class DetailActivity extends AppCompatActivity {
                         tv_yeardet.setText(String.valueOf(detailModel.getYear()));
                         tv_ratingdet.setText(detailModel.getRating());
                         tv_desc.setText(detailModel.getDescription());
-
-                        // Muat gambar menggunakan Picasso
                         Picasso.get().load(detailModel.getBig_image()).into(iv_photo);
 
-                        // Tampilkan elemen lain saat ProgressBar disembunyikan
-                        iv_photo.setVisibility(View.VISIBLE);
-                        iv_back.setVisibility(View.VISIBLE);
-                        iv_fav.setVisibility(View.VISIBLE);
-                        tv_ratingdet.setVisibility(View.VISIBLE);
-                        tv_yeardet.setVisibility(View.VISIBLE);
-                        tv_titledet.setVisibility(View.VISIBLE);
-                        tv_desc.setVisibility(View.VISIBLE);
-                        textdesc.setVisibility(View.VISIBLE);
-                        imgstar.setVisibility(View.VISIBLE);
+                        showViews();
+
+                        int loggedInUserId = getLoggedInUserId();
+                        isFavorite = databaseHelper.isFavorite(loggedInUserId, movieId); //Memeriksa apakah film dengan movieId tertentu sudah ditandai sebagai favorit
+                        iv_fav.setImageResource(isFavorite ? R.drawable.love : R.drawable.baseline_favorite_border_24);
+                        iv_fav.setEnabled(true);
+
                     } else {
+                        showErrorMessage(true);
                         Toast.makeText(DetailActivity.this, "Failed to retrieve movie details", Toast.LENGTH_SHORT).show();
                     }
                     progressBar.setVisibility(View.GONE);
                 });
             }
 
+            //ketika pemanggilan ke API gagal
             @Override
             public void onFailure(Call<DetailModel> call, Throwable t) {
                 handler.post(() -> {
-                    Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    showErrorMessage(true);
                     progressBar.setVisibility(View.GONE);
-
-                    // Pastikan elemen lain tampil kembali meskipun panggilan API gagal
-                    iv_photo.setVisibility(View.VISIBLE);
-                    iv_back.setVisibility(View.VISIBLE);
-                    iv_fav.setVisibility(View.VISIBLE);
-                    tv_ratingdet.setVisibility(View.VISIBLE);
-                    tv_yeardet.setVisibility(View.VISIBLE);
-                    tv_titledet.setVisibility(View.VISIBLE);
-                    tv_desc.setVisibility(View.VISIBLE);
-                    textdesc.setVisibility(View.VISIBLE);
-                    imgstar.setVisibility(View.VISIBLE);
                 });
             }
         });
+    }
+
+    private int getLoggedInUserId() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        return sharedPreferences.getInt("user_id", -1);
+    }
+
+    private void saveFavoriteMovie(int userId, String movieId) {
+        databaseHelper.insertFavorite(userId, movieId);
+    }
+
+    private void removeFavoriteMovie(int userId, String movieId) {
+        databaseHelper.deleteFavorite(userId, movieId);
+    }
+
+    private void hideViews() {
+        iv_photo.setVisibility(View.GONE);
+        iv_back.setVisibility(View.GONE);
+        iv_fav.setVisibility(View.GONE);
+        tv_ratingdet.setVisibility(View.GONE);
+        tv_yeardet.setVisibility(View.GONE);
+        tv_titledet.setVisibility(View.GONE);
+        tv_desc.setVisibility(View.GONE);
+        textdesc.setVisibility(View.GONE);
+        imgstar.setVisibility(View.GONE);
+    }
+
+    private void showViews() {
+        iv_photo.setVisibility(View.VISIBLE);
+        iv_back.setVisibility(View.VISIBLE);
+        iv_fav.setVisibility(View.VISIBLE);
+        tv_ratingdet.setVisibility(View.VISIBLE);
+        tv_yeardet.setVisibility(View.VISIBLE);
+        tv_titledet.setVisibility(View.VISIBLE);
+        tv_desc.setVisibility(View.VISIBLE);
+        textdesc.setVisibility(View.VISIBLE);
+        imgstar.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage(boolean show) {
+        if (show) {
+            tvError.setVisibility(View.VISIBLE);
+            btnRetry.setVisibility(View.VISIBLE);
+        } else {
+            tvError.setVisibility(View.GONE);
+            btnRetry.setVisibility(View.GONE);
+        }
     }
 }

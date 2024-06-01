@@ -12,7 +12,7 @@ import com.example.infomovie.Sqlite.DatabaseHelper;
 
 public class RegistrasiActivity extends AppCompatActivity {
 
-    EditText et_nim;
+    EditText et_username;
     EditText et_password;
     Button btn_register;
     DatabaseHelper databaseHelper;
@@ -25,16 +25,16 @@ public class RegistrasiActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
 
-        et_nim = findViewById(R.id.et_username2);
+        et_username = findViewById(R.id.et_username2);
         et_password = findViewById(R.id.et_password2);
         btn_register = findViewById(R.id.btn_register);
 
         btn_register.setOnClickListener(v -> {
-            String nim = et_nim.getText().toString().trim();
+            String username = et_username.getText().toString().trim();
             String password = et_password.getText().toString().trim();
 
-            if (!nim.isEmpty() && !password.isEmpty()) {
-                databaseHelper.insertData(nim, password);
+            if (!username.isEmpty() && !password.isEmpty()) {
+                databaseHelper.insertData(username, password, "-");
 
                 Toast.makeText(RegistrasiActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                 finish();

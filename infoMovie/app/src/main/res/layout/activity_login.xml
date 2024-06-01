@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/bgMovie"
+    android:background="@drawable/bg_movie"
     tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView

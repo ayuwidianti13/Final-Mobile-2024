@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="abu">#3A3F53</color>
+    <color name="black">#FF000000</color>
+    <color name="dark_blue">#252836</color>
+    <color name="main_color">#1F1D2B</color>
+    <color name="orange">#FF7427</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#CCA003</color>
+    <string name="app_name">infoMovie</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <style name="Base.Theme.InfoMovie" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.InfoMovie" parent="Base.Theme.InfoMovie"/>
+</resources>

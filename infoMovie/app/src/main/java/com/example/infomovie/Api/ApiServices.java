@@ -12,7 +12,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiServices {
-    String RAPID_API_KEY = "1e99466161msh8c0b8eacc4ad5f5p188a78jsnb0c80df94fd0";
+    String RAPID_API_KEY = "d1e36f4c96msh8565fc0981b4d54p10c3d3jsn56c344ec88fa";
     String RAPID_API_HOST = "imdb-top-100-movies.p.rapidapi.com";
 
     @Headers({

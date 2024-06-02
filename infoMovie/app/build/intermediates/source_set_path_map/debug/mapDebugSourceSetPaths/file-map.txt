@@ -25,10 +25,10 @@ com.example.infomovie.app-recyclerview-1.1.0-23 C:\Users\ACER\.gradle\caches\tra
 com.example.infomovie.app-appcompat-1.6.1-24 C:\Users\ACER\.gradle\caches\transforms-4\d590f66e3d1b4d795735dd4ce6db4afb\transformed\appcompat-1.6.1\res
 com.example.infomovie.app-activity-1.9.0-25 C:\Users\ACER\.gradle\caches\transforms-4\dbaccfdb96d327609aaee5a602a133e1\transformed\activity-1.9.0\res
 com.example.infomovie.app-lifecycle-livedata-2.6.2-26 C:\Users\ACER\.gradle\caches\transforms-4\df3fdbaaaa0999604e04cd95a135878f\transformed\lifecycle-livedata-2.6.2\res
-com.example.infomovie.app-pngs-27 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\build\generated\res\pngs\debug
-com.example.infomovie.app-resValues-28 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\build\generated\res\resValues\debug
-com.example.infomovie.app-packageDebugResources-29 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.example.infomovie.app-packageDebugResources-30 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.example.infomovie.app-debug-31 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.example.infomovie.app-debug-32 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\src\debug\res
-com.example.infomovie.app-main-33 C:\Users\ACER\AndroidStudioProjects\infoMovie\app\src\main\res
+com.example.infomovie.app-pngs-27 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\build\generated\res\pngs\debug
+com.example.infomovie.app-resValues-28 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\build\generated\res\resValues\debug
+com.example.infomovie.app-packageDebugResources-29 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.infomovie.app-packageDebugResources-30 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.infomovie.app-debug-31 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.example.infomovie.app-debug-32 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\src\debug\res
+com.example.infomovie.app-main-33 C:\Users\ACER\AndroidStudioProjects\infoMoviefav\app\src\main\res

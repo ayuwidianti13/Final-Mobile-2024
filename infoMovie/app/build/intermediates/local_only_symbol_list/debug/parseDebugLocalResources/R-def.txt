@@ -14,7 +14,6 @@ drawable baseline_delete_24
 drawable baseline_favorite_border_24
 drawable baseline_home_24
 drawable baseline_search_24
-drawable bg_main
 drawable bg_movie
 drawable blur_bg
 drawable bookmark
@@ -32,7 +31,6 @@ drawable orange_button_background
 drawable oval_btn_background
 drawable person
 drawable star
-drawable topbar_card
 drawable wlpkupu
 id btn_change
 id btn_login

@@ -21,7 +21,7 @@
                 app:cardCornerRadius="15dp"
                 android:layout_margin="3dp"
                 app:cardElevation="3dp"
-                android:backgroundTint="@color/abu">
+                android:backgroundTint="@color/dark_blue">
 
                 <ImageView
                     android:id="@+id/imgPhoto"
@@ -37,48 +37,37 @@
                     android:layout_height="100dp"
                     android:layout_marginStart="100dp"
                     android:layout_gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/tvTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
                             android:textColor="@color/yellow"
                             android:text="Ayu widianti"
                             android:textStyle="bold"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginStart="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="18sp" />
                         <TextView
                             android:id="@+id/tvTahun"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="5dp"
                             android:textColor="@android:color/white"
                             android:text="1988"
-                            android:fontFamily="sans-serif"
-                            android:textSize="12sp"
-                            android:layout_below="@id/tvTitle"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="170dp"
-                        android:layout_marginTop="70dp">
-                        <ImageView
-                            android:layout_width="17dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/star"
-                            android:layout_gravity="center_vertical"/>
+                            android:textSize="18sp" />
                         <TextView
                             android:id="@+id/ratingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="9.9"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@color/yellow"
-                            android:layout_gravity="center_vertical"/>
+                            android:textColor="@color/yellow"/>
+
                     </LinearLayout>
 
                 </RelativeLayout>

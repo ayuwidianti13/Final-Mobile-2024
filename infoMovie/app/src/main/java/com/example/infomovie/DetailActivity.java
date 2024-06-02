@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        databaseHelper = new DatabaseHelper(this); // intance
+        databaseHelper = new DatabaseHelper(this); // instance
 
         iv_photo = findViewById(R.id.iv_photo);
         iv_back = findViewById(R.id.iv_back);
@@ -90,7 +90,7 @@ public class DetailActivity extends AppCompatActivity {
                 saveFavoriteMovie(loggedInUserId, movieId);
                 iv_fav.setImageResource(R.drawable.love);
                 isFavorite = true;
-                iv_fav.setEnabled(false); // hilangkan
+                iv_fav.setEnabled(false); // Disable button to prevent multiple clicks
                 Toast.makeText(DetailActivity.this, "Film added to favorites", Toast.LENGTH_SHORT).show();
             } else {
                 removeFavoriteMovie(loggedInUserId, movieId);
@@ -101,7 +101,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-
         btnRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +110,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovieDetails(String movieId) {
-        Retrofit retrofit = ApiConfig.getClient(); //untuk membuat panggilan ke API.
+        Retrofit retrofit = ApiConfig.getClient(); // untuk membuat panggilan ke API.
         ApiServices apiServices = retrofit.create(ApiServices.class);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -135,9 +134,12 @@ public class DetailActivity extends AppCompatActivity {
                         showViews();
 
                         int loggedInUserId = getLoggedInUserId();
-                        isFavorite = databaseHelper.isFavorite(loggedInUserId, movieId); //Memeriksa apakah film dengan movieId tertentu sudah ditandai sebagai favorit
+                        isFavorite = databaseHelper.isFavorite(loggedInUserId, movieId); // Memeriksa apakah film dengan movieId tertentu sudah ditandai sebagai favorit
                         iv_fav.setImageResource(isFavorite ? R.drawable.love : R.drawable.baseline_favorite_border_24);
                         iv_fav.setEnabled(true);
+
+                        // Sembunyikan pesan error dan tombol retry setelah data berhasil diambil
+                        showErrorMessage(false);
 
                     } else {
                         showErrorMessage(true);
@@ -147,7 +149,7 @@ public class DetailActivity extends AppCompatActivity {
                 });
             }
 
-            //ketika pemanggilan ke API gagal
+            // ketika pemanggilan ke API gagal
             @Override
             public void onFailure(Call<DetailModel> call, Throwable t) {
                 handler.post(() -> {

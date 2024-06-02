@@ -34,8 +34,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// Import statements
-
 public class FavoriteFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -44,6 +42,7 @@ public class FavoriteFragment extends Fragment {
     private ApiServices service;
     private SharedPreferences preferences;
     private ProgressBar progressBar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,10 +53,12 @@ public class FavoriteFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Inisialisasi RecyclerView dan ProgressBar
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = view.findViewById(R.id.progressBar);
-        service = ApiConfig.getClient().create(ApiServices.class); // Membuat layanan Retrofit dari konfigurasi API
+
+        service = ApiConfig.getClient().create(ApiServices.class);
         databaseHelper = new DatabaseHelper(requireActivity());
         preferences = requireActivity().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
 
@@ -65,49 +66,46 @@ public class FavoriteFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         displayFavoriteMovies();
     }
 
     private void displayFavoriteMovies() {
-        int userId = preferences.getInt("user_id", 0); // Mendapatkan ID pengguna dari preferensi
+        int userId = preferences.getInt("user_id", 0);
 
-        Cursor cursor = databaseHelper.getFavoriteMoviesByUserId(userId); // Mendapatkan daftar film favorit dari database lokal
-        ArrayList<String> favoritesMoviesId = new ArrayList<>(); // Membuat ArrayList untuk menyimpan ID film favorit
-
-        // Mengisi ArrayList dengan ID film favorit dari kursor
+        // Ambil daftar film favorit dari database
+        Cursor cursor = databaseHelper.getFavoriteMoviesByUserId(userId);
+        ArrayList<String> favoritesMoviesId = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 String movieId = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_MOVIE_ID));
                 favoritesMoviesId.add(movieId);
             } while (cursor.moveToNext());
         }
+        cursor.close();
 
+        // Sembunyikan RecyclerView dan tampilkan ProgressBar saat memuat data
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        // Membuat executor untuk menjalankan tugas di latar belakang
+        // Jalankan tugas background untuk memanggil API
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Handler handler = new Handler(Looper.getMainLooper()); // Handler untuk memproses hasil di utas utama
+        Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
             Call<List<MovieModels>> call = service.getMovie();
             call.enqueue(new Callback<List<MovieModels>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<MovieModels>> call, @NonNull Response<List<MovieModels>> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
                         List<MovieModels> movieModels = response.body();
-                        List<MovieModels> favoriteMovies = new ArrayList<>();
-
-                        // Memfilter daftar film untuk mendapatkan film-film favorit
+                        List<MovieModels> favoriteMovies = new ArrayList<>(); // untuk menyimpan film-film yang merupakan favorit pengguna.
                         for (MovieModels movieModel : movieModels) {
                             if (favoritesMoviesId.contains(movieModel.getId())) {
                                 favoriteMovies.add(movieModel);
                             }
                         }
-
-                        // Membuat adapter mengaturnya ke RecyclerView
                         favoritAdapter = new FavoriteAdapter(getParentFragmentManager(), favoriteMovies, userId);
                         recyclerView.setAdapter(favoritAdapter);
 
@@ -119,6 +117,8 @@ public class FavoriteFragment extends Fragment {
                                 recyclerView.setVisibility(View.VISIBLE);
                             }
                         });
+                    } else {
+                        handler.post(() -> progressBar.setVisibility(View.GONE));
                     }
                 }
 
@@ -130,4 +130,3 @@ public class FavoriteFragment extends Fragment {
         });
     }
 }
-
